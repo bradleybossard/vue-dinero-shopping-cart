@@ -21,6 +21,14 @@
       Shipping
       <span class="cart-price">{{ data.shippingPrice }}</span>
     </h3>
+		<h3 class="cart-line">
+			Subtotal
+			<span class="cart-price">{{ getSubtotal }}</span>
+		</h3>
+		<h3 class="cart-line">
+			Total
+			<span class="cart-price cart-total">{{ getTotal }}</span>
+		</h3>
   </div>
 </div>
 </template>
@@ -40,6 +48,19 @@ export default {
     fetch('./src/assets/products.json')
       .then(response => response.json())
       .then(json => (this.data = json))
+  },
+  computed: {
+    getSubtotal() {
+      return this.data.items.reduce(
+        (a, b) => a + b.price * b.quantity,
+        0
+      )
+    },
+    getTotal() {
+      return (
+        this.getSubtotal + this.data.shippingPrice
+      )
+    }
   }
 }
 </script>
