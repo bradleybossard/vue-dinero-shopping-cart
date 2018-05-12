@@ -1,0 +1,26 @@
+{
+  "items": [
+    {
+      "title": "Item 1",
+      "description": "A wonderful product",
+      "thumbnail": "https://fakeimg.pl/80x80",
+      "quantity": 1,
+      "price": 20
+    },
+    {
+      "title": "Item 2",
+      "description": "A wonderful product",
+      "thumbnail": "https://fakeimg.pl/80x80",
+      "quantity": 1,
+      "price": 15
+    },
+    {
+      "title": "Item 3",
+      "description": "A wonderful product",
+      "thumbnail": "https://fakeimg.pl/80x80",
+      "quantity": 2,
+      "price": 10
+    }
+  ],
+  "shippingPrice": 20
+}
