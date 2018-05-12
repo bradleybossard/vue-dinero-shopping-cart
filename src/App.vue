@@ -3,28 +3,23 @@
   <div class="cart">
     <h1 class="title">Order</h1>
     <ul class="items">
-      <li class="item">
+      <li :key="item.id" v-for="item in data.items" class="item">
         <div class="item-preview">
-          <img src="" alt="" class="item-thumbnail">
+          <img :src="item.thumbnail" :alt="item.title" class="item-thumbnail">
           <div>
-            <h2 class="item-title"></h2>
-            <p class="item-description"></p>
+            <h2 class="item-title">{{ item.title }}</h2>
+            <p class="item-description">{{ item.description }}</p>
           </div>
         </div>
         <div>
-          <input type="text" class="item-quantity">
-          <span class="item-price"></span>
+          <input type="text" class="item-quantity" v-model="item.quantity">
+          <span class="item-price">{{ item.price }}</span>
         </div>
       </li>
     </ul>
     <h3 class="cart-line">
-      Subtotal <span class="cart-price"></span>
-    </h3>
-    <h3 class="cart-line">
-      Shipping <span class="cart-price"></span>
-    </h3>
-    <h3 class="cart-line">
-      Total <span class="cart-price cart-total"></span>
+      Shipping
+      <span class="cart-price">{{ data.shippingPrice }}</span>
     </h3>
   </div>
 </div>
@@ -33,10 +28,18 @@
 <script>
 export default {
   name: 'app',
-  data () {
+  data() {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      data: {
+        items: [],
+        shippingPrice: 0
+      }
     }
+  },
+  created() {
+    fetch('./src/assets/products.json')
+      .then(response => response.json())
+      .then(json => (this.data = json))
   }
 }
 </script>
