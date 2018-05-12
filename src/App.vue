@@ -2,34 +2,34 @@
 <div id="app">
   <div class="cart">
     <h1 class="title">Order</h1>
-    <ul class="items">
-      <li :key="item.id" v-for="item in data.items" class="item">
-        <div class="item-preview">
-          <img :src="item.thumbnail" :alt="item.title" class="item-thumbnail">
-          <div>
-            <h2 class="item-title">{{ item.title }}</h2>
-            <p class="item-description">{{ item.description }}</p>
-          </div>
-        </div>
-        <div>
-          <input type="text" class="item-quantity" v-model="item.quantity">
-          <span class="item-price">{{ item.price }}</span>
-        </div>
-      </li>
-    </ul>
-    <h3 class="cart-line">
-      Shipping
-      <span class="cart-price">{{ data.shippingPrice }}</span>
-    </h3>
-		<h3 class="cart-line">
-			Subtotal
-			<span class="cart-price">{{ getSubtotal }}</span>
-		</h3>
-		<h3 class="cart-line">
-			Total
-			<span class="cart-price cart-total">{{ getTotal }}</span>
-		</h3>
   </div>
+  <ul class="items">
+    <li :key="item.id" v-for="item in data.items" class="item">
+      <div class="item-preview">
+        <img :src="item.thumbnail" :alt="item.title" class="item-thumbnail">
+        <div>
+          <h2 class="item-title">{{ item.title }}</h2>
+          <p class="item-description">{{ item.description }}</p>
+        </div>
+      </div>
+      <div>
+        <input type="text" class="item-quantity" v-model="item.quantity">
+        <span class="item-price">{{ toPrice(item.price).toFormat() }}</span>
+      </div>
+    </li>
+  </ul>
+  <h3 class="cart-line">
+    Subtotal
+    <span class="cart-price">{{ getSubtotal.toFormat() }}</span>
+  </h3>
+  <h3 class="cart-line">
+    Shipping
+    <span class="cart-price">{{ getShippingPrice.toFormat() }}</span>
+  </h3>
+  <h3 class="cart-line">
+    Total
+    <span class="cart-price cart-total">{{ getTotal.toFormat() }}</span>
+  </h3>
 </div>
 </template>
 
@@ -38,6 +38,11 @@ import Dinero from 'dinero.js'
 
 export default {
   name: 'app',
+  methods: {
+    toPrice(amount, factor = Math.pow(10, 2)) {
+      return Dinero({ amount: Math.round(amount * factor) })
+    }
+  },
   data() {
     return {
       data: {
@@ -52,16 +57,26 @@ export default {
       .then(json => (this.data = json))
   },
   computed: {
+/*
+    toPrice(amount, factor = Math.pow(10, 2)) {
+      return Dinero({ amount: Math.round(amount * factor) })
+    },
+*/
+    getShippingPrice() {
+      return this.toPrice(this.data.shippingPrice)
+    },
     getSubtotal() {
       return this.data.items.reduce(
-        (a, b) => a + b.price * b.quantity,
-        0
+        (a, b) =>
+          a.add(
+            this.toPrice(b.price).multiply(b.quantity)
+          ),
+        Dinero()
       )
     },
     getTotal() {
-      return (
-        this.getSubtotal + this.data.shippingPrice
-      )
+       // console.log('getShipping = ' + this.getShippingPrice);
+      return this.getSubtotal.add(this.getShippingPrice)
     }
   }
 }
