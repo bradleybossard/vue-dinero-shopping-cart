@@ -34,6 +34,8 @@
 </template>
 
 <script>
+import Dinero from 'dinero.js'
+
 export default {
   name: 'app',
   data() {
